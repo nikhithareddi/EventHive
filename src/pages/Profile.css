@@ -155,7 +155,7 @@ body {
 }
 
 .profile-button:hover {
-  background-color: #1a5fcf;
+  background-color: #e5cb5b;
 }
 
 /* Responsive design */
@@ -217,9 +217,9 @@ body {
 
 .profile-icon {
   font-size: 24px;
-  margin-left: 15px;
+  margin-left: 95px;
   /*margin-bottom: 80px;*/
-  color: #43ca2e;
+  color: #d60c8c;
 }
 
 /* Responsive adjustments */

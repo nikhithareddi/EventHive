@@ -1,4 +1,19 @@
-.ion-padding {
-    background: url('bg.jpg');
-
-}
+.login-content {
+    display: grid;
+    place-items: center;
+    background-image: url("/bg-login.jpg");
+    background-size: cover;
+    background-position: center;
+    height: 100%;
+  }
+  
+  .login-box {
+    background-color: #f4b9d6;
+    padding: 50px;
+    border-radius: 90px;
+    box-shadow: 0 8px 24px rgba(21, 18, 18, 0.911);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+  }
+  

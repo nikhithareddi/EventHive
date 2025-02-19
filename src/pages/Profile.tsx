@@ -27,7 +27,7 @@ const Profile: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle className="center-text">Profile</IonTitle>
+        <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>Profile</h2>
         </IonToolbar>
       </IonHeader>
 
@@ -39,48 +39,30 @@ const Profile: React.FC = () => {
               alt="Profile Pic" 
             />
           </IonAvatar>
-          <IonLabel className="profile-name">{userData?.username || "Loading..."}</IonLabel>
+          <IonLabel className="profile-name">{userData?.username || "Your Name"}</IonLabel>
         </div>
 
         <IonGrid>
+      
+       
           <IonRow className="ion-justify-content-center">
-            <IonCol size="4" className="profile-option" onClick={() => history.push('/clubs')}>
-              <IonIcon icon={peopleOutline} className="profile-icon" />
-              <IonLabel>Clubs</IonLabel>
-            </IonCol>
-            <IonCol size="4" className="profile-option" onClick={() => history.push('/events')}>
+            
+            <IonCol size="8" className="profile-option" onClick={() => history.push('/settings-events')}>
               <IonIcon icon={calendarOutline} className="profile-icon" />
               <IonLabel>Events</IonLabel>
             </IonCol>
           </IonRow>
           <IonRow className="ion-justify-content-center">
-            <IonCol size="10" className="profile-option" onClick={() => history.push('/settings')}>
-              <IonIcon icon={settingsOutline} className="profile-icon" />
-              <IonLabel>Settings</IonLabel>
-            </IonCol>
+          <IonCol size="8" className="profile-option" onClick={() => history.push('/edit-profile')}>
+  <IonIcon icon={settingsOutline} className="profile-icon" />
+  <IonLabel>Settings</IonLabel> 
+</IonCol>
+
           </IonRow>
         </IonGrid>
       </IonContent>
 
-      {/* Bottom Navigation */}
-      <IonToolbar>
-        <IonGrid>
-          <IonRow className="ion-justify-content-around">
-            <IonButton fill="clear" onClick={() => history.push('/home')}>
-              <IonIcon icon={homeOutline} /> Home
-            </IonButton>
-            <IonButton fill="clear" onClick={() => history.push('/create-event')}>
-              <IonIcon icon={calendarOutline} /> Events
-            </IonButton>
-            <IonButton fill="clear" onClick={() => history.push('/search')}>
-              <IonIcon icon={searchOutline} /> Search
-            </IonButton>
-            <IonButton fill="clear" onClick={() => history.push('/profile')}>
-              <IonIcon icon={personCircleOutline} /> Profile
-            </IonButton>
-          </IonRow>
-        </IonGrid>
-      </IonToolbar>
+     
     </IonPage>
   );
 };

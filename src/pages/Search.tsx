@@ -1,65 +1,154 @@
-import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonAvatar, IonLabel, IonGrid, IonRow, IonCol, IonIcon,IonSearchbar,IonItem,IonList } from '@ionic/react';
-import { personCircle, peopleOutline, calendar,search, settingsOutline, home, searchOutline } from 'ionicons/icons';
-import { useState } from 'react';
-import { useHistory } from 'react-router';
-import './Search.css';
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonSearchbar,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonItem,
+  IonLabel,
+  IonButton,
+  IonGrid,
+  IonRow,
+  IonCol,
+} from "@ionic/react";
+
+import { useEffect, useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebaseConfig";
+import { doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { auth } from "../firebaseConfig";
+
+interface EventData {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  clubName: string;
+  location: string;
+}
+
+
+const handleRegister = async (eventId: string) => {
+  const user = auth.currentUser;
+  if (!user) return alert("Please log in to register");
+
+  try {
+    const eventRef = doc(db, "events", eventId);
+    await updateDoc(eventRef, {
+      registeredUsers: arrayUnion(user.uid),
+    });
+    alert("You have registered for the event!");
+  } catch (err) {
+    console.error("Registration failed:", err);
+  }
+};
 
 const Search: React.FC = () => {
-  const history = useHistory(); // Call the useHistory hook to get the history object
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState([
-    { id: 1, name: 'La cafe', type: 'Event' },
-    { id: 2, name: 'ASM', type: 'Club' },
-    { id: 3, name: 'Music Fest', type: 'Event' },
-  ]);
+  const [searchText, setSearchText] = useState("");
+  const [allEvents, setAllEvents] = useState<EventData[]>([]);
+  const [suggestedEvents, setSuggestedEvents] = useState<EventData[]>([]);
 
-  const handleSearch = (e: CustomEvent) => {
-    setQuery(e.detail.value!);
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const snapshot = await getDocs(collection(db, "events"));
+      const fetchedEvents = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as Omit<EventData, "id">),
+      }));
+      setAllEvents(fetchedEvents);
+    };
+
+    fetchEvents();
+  }, []);
+
+  useEffect(() => {
+    if (searchText.trim() === "") {
+      setSuggestedEvents([]); 
+    } else {
+      const results = allEvents.filter((event) =>
+        event.title.toLowerCase().includes(searchText.toLowerCase()) ||
+        event.location.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setSuggestedEvents(results);
+    }
+  }, [searchText, allEvents]);
+  const formatDateTime = (dateStr: string, timeStr: string) => {
+    try {
+      const [year, month, day] = dateStr.split("-");
+      const [hour, minute] = timeStr.split(":");
+  
+      const date = new Date(
+        Number(year),
+        Number(month) - 1,
+        Number(day),
+        Number(hour),
+        Number(minute)
+      );
+  
+      return date.toLocaleString("en-US", {
+        month: "short", // Apr
+        day: "numeric", // 15
+        hour: "numeric", // 3
+        minute: "2-digit", // 00
+        hour12: true, // PM/AM
+      });
+    } catch (err) {
+      return "Invalid date";
+    }
   };
-
+  
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Search🔎</IonTitle>
+        <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>Search</h2>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding">
-        <IonSearchbar value={query} onIonInput={handleSearch} placeholder="Search events or clubs..." />
-        
-        <IonList>
-          {results.filter(item => item.name.toLowerCase().includes(query.toLowerCase())).map(item => (
-            <IonItem key={item.id}>
-              <IonIcon icon={searchOutline} slot="end" />
-              <IonLabel>
-                <h3>{item.name}</h3>
-                <p>{item.type}</p>
-              </IonLabel>
-            </IonItem>
-          ))}
-        </IonList>
-      </IonContent>
+      <IonContent>
+        <IonSearchbar
+          value={searchText}
+          onIonInput={(e) => setSearchText(e.detail.value!)}
+          debounce={100}
+          placeholder="Search by title"
+        />
 
-      {/* Bottom Navigation */}
-      <IonToolbar>
         <IonGrid>
-          <IonRow className="ion-justify-content-around">
-            <IonButton fill="clear" onClick={() => history.push('/home')}>
-              <IonIcon icon={home} /> 
-            </IonButton>
-            <IonButton fill="clear" onClick={() => history.push('/create-event')}>
-              <IonIcon icon={calendar} /> 
-            </IonButton>
-            <IonButton fill="clear" onClick={() => history.push('/search')}>
-              <IonIcon icon={search} /> 
-            </IonButton>
-            <IonButton fill="clear" onClick={() => history.push('/profile')}>
-              <IonIcon icon={personCircle} /> 
-            </IonButton>
+          <IonRow>
+            {suggestedEvents.map((event) => (
+              <IonCol size="6" key={event.id}>
+                <IonCard>
+                <IonCardHeader>
+    <IonCardTitle>{event.title}</IonCardTitle>
+    <IonCardSubtitle>{event.clubName}</IonCardSubtitle>
+    <IonCardSubtitle>{formatDateTime(event.date, event.time)}</IonCardSubtitle>
+  </IonCardHeader>
+  <IonItem lines="none">
+    📍 {event.location}
+    <IonButton
+      size="small"
+      fill="outline"
+      slot="end"
+      onClick={() => handleRegister(event.id)}
+    >
+      Register
+    </IonButton>
+  </IonItem>
+                </IonCard>
+              </IonCol>
+            ))}
           </IonRow>
         </IonGrid>
-      </IonToolbar>
+
+        {searchText && suggestedEvents.length === 0 && (
+          <p style={{ padding: "1rem", textAlign: "center" }}>No matching events found.</p>
+        )}
+      </IonContent>
     </IonPage>
   );
 };

@@ -11,14 +11,14 @@
 
 ion-item {
   --border-radius: 8px;
-  --background: var(--ion-background-color, rgb(124, 120, 135));
+  --background: var(--ion-background-color, rgb(139, 31, 248));
   margin-bottom: 12px;
 }
 
 ion-button {
   margin-top: 16px;
   --border-radius: 10px;
-  --box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  --box-shadow: 0px 4px 6px rgb(63, 59, 59);
 }
  ion-toolbar {
       display: flex;
@@ -27,17 +27,17 @@ ion-button {
  }
 
  ion-datetime {
-  --background: rgba(229, 237, 222, 0.458);
+  --background: rgba(232, 234, 179, 0.955);
   --background-rgb: 245, 235, 247;
-  --wheel-highlight-background: rgb(218, 216, 255);
+  --wheel-highlight-background: rgb(24, 24, 28);
   --wheel-highlight-border-radius: 48px;
   --wheel-fade-background-rgb: 245, 235, 247;
 }
 
 ion-datetime::part(wheel-item) {
-  color: rgb(24, 26, 27);
+  color: rgb(0, 0, 0);
 }
 
 ion-datetime::part(wheel-item active) {
-  color: rgb(65, 16, 86);
+  color: rgb(244, 242, 245);
 }

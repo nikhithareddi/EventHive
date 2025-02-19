@@ -1,6 +1,11 @@
 {
-  "short_name": "Ionic App",
-  "name": "My Ionic App",
+  "short_name": "EventHive",
+  "name": "EventHive",
+  "orientation": "portrait",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
   "icons": [
     {
       "src": "assets/icon/favicon.png",
@@ -12,10 +17,11 @@
       "type": "image/png",
       "sizes": "512x512",
       "purpose": "maskable"
+    },
+    {
+      "src": "assets/icon/icon.png",
+      "type": "image/png",
+      "sizes": "192x192"
     }
-  ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff"
+  ]
 }

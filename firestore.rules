@@ -2,15 +2,22 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Temporarily allow anyone to write to users collection (not recommended for production)
-    match /users/{userId} {
-      allow read, write: if true;
+    // Rule for events
+    match /events/{eventId} {
+      allow read: if true;
+
+      allow create: if request.auth != null &&
+                    get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "Club Member" &&
+                    request.resource.data.createdBy == request.auth.uid;
+
+      allow update, delete: if request.auth != null &&
+                            get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "Club Member" &&
+                            resource.data.createdBy == request.auth.uid;
     }
 
-    // Default rule for events
-    match /events/{eventId} {
-      allow read, create: if request.auth != null;
+    // Rule for users
+    match /users/{userId} {
+      allow read, write: if request.auth.uid == userId;
     }
   }
 }
-

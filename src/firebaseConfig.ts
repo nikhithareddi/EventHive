@@ -2,8 +2,9 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getMessaging } from "firebase/messaging";
 
-const firebaseConfig = {
+export const firebaseConfig = {
     apiKey: "AIzaSyDvMyJUV637MaRVfgfx336nl2wHons1-aA",
     authDomain: "sample-firebase-ai-app-f47e7.firebaseapp.com",
     projectId: "sample-firebase-ai-app-f47e7",
@@ -15,5 +16,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const messaging = getMessaging(app);
 
-export { auth, db };
+export { auth, db, messaging, app};

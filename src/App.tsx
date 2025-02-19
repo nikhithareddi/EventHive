@@ -1,86 +1,198 @@
-import { Redirect, Route } from "react-router-dom";
-import { IonApp, IonButton, IonRouterOutlet, setupIonicReact } from "@ionic/react";
+import { Redirect, Route, useLocation } from "react-router-dom";
+import {
+  IonApp,
+  IonButton,
+  IonRouterOutlet,
+  IonSplitPane,
+  IonMenu,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonButtons,
+  IonMenuButton,
+  IonPage,
+  setupIonicReact,
+} from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import Home from "./pages/Home";
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import { Preferences } from "@capacitor/preferences";
-import EventForm from "./pages/EventForm"; // Import the EventForm page
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "./firebaseConfig";
+import { useHistory } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import Home from "./pages/Home";
+import EventForm from "./pages/EventForm";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import "./theme/global.css";
-import "./theme/variables.css";
 import Profile from "./pages/Profile";
 import Search from "./pages/Search";
-import Auth from "./components/Auth";
 import Calendar from "./pages/Calendar";
-import {auth,db} from "./firebaseConfig";
+import Auth from "./components/Auth";
+import "./theme/global.css";
+import "./theme/variables.css";
+import EditProfile from "./pages/EditProfile";
+import SettingsEvents from "./pages/SettingsEvents";
 
 setupIonicReact();
+
+const RouterWrapper: React.FC<{
+  isDarkMode: boolean;
+  setIsDarkMode: (val: boolean) => void;
+}> = ({ isDarkMode, setIsDarkMode }) => {
+  const location = useLocation();
+  const hideMenu = ["/login", "/register"].includes(location.pathname);
+
+  const toggleDarkMode = () => {
+    const newMode = !isDarkMode;
+    setIsDarkMode(newMode);
+    document.body.classList.toggle("dark", newMode);
+    Preferences.set({ key: "theme", value: newMode ? "dark" : "light" });
+  };
+
+  const history = useHistory();
+
+const handleLogout = async () => {
+  try {
+    await signOut(auth);
+    history.push("/login");
+  } catch (error) {
+    console.error("Logout error:", error);
+  }
+};
+
+
+  return !hideMenu ? (
+    <IonSplitPane contentId="main-content">
+      <IonMenu side="end" contentId="main-content">
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>Menu</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent className="ion-padding">
+          <IonList>
+          
+  <IonItem routerLink="/home" routerDirection="root"><IonLabel>Home</IonLabel></IonItem>
+  <IonItem routerLink="/create-event" routerDirection="root"><IonLabel>Create Event</IonLabel></IonItem>
+  <IonItem routerLink="/search" routerDirection="root"><IonLabel>Search</IonLabel></IonItem>
+  <IonItem routerLink="/calendar" routerDirection="root"><IonLabel>Calendar</IonLabel></IonItem>
+  <IonItem routerLink="/profile" routerDirection="root"><IonLabel>My Profile</IonLabel></IonItem>
+  <IonItem button onClick={handleLogout}><IonLabel>Logout</IonLabel></IonItem>
+</IonList>
+
+
+          
+        </IonContent>
+      </IonMenu>
+
+      <IonPage id="main-content">
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>Event Hive</IonTitle>
+            <IonButtons slot="end">
+              <IonMenuButton />
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent>
+          <IonRouterOutlet>
+            <Route exact path="/auth" component={Auth} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/home" component={Home} />
+            <Route exact path="/profile" component={Profile} />
+            <Route exact path="/edit-profile" component={EditProfile}/>
+            <Route exact path="/settings-events" component={SettingsEvents} />
+            <Route exact path="/search" component={Search} />
+            <Route exact path="/create-event" component={EventForm} />
+            <Route exact path="/calendar" component={Calendar} />
+            <Redirect exact from="/" to="/login" />
+          </IonRouterOutlet>
+        </IonContent>
+        <IonButton
+          expand="full"
+          onClick={toggleDarkMode}
+          style={{
+            position: "fixed",
+            top: "0px",
+            bottom: "2px",
+            right: "40px",
+            zIndex: 1000,
+            width: "40px",
+            height: "40px",
+          }}
+        >
+          {isDarkMode ? "🌞" : "🌙"}
+        </IonButton>
+      </IonPage>
+    </IonSplitPane>
+  ) : (
+    <IonRouterOutlet>
+      <Route exact path="/auth" component={Auth} />
+      <Route exact path="/login" component={Login} />
+      <Route exact path="/register" component={Register} />
+      <Redirect exact from="/" to="/login" />
+    </IonRouterOutlet>
+  );
+};
 
 const App: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    // Load theme from storage on app start
     Preferences.get({ key: "theme" }).then((result) => {
       if (result.value === "dark") {
         document.body.classList.add("dark");
         setIsDarkMode(true);
       }
     });
+
+    const messaging = getMessaging();
+    onMessage(messaging, (payload) => {
+      alert(`📢 ${payload.notification?.title}: ${payload.notification?.body}`);
+    });
+
+    const requestAndSaveFCMToken = async () => {
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission !== "granted") return;
+
+        const currentToken = await getToken(messaging, {
+          vapidKey: "BEMUaQDRJsx-jhRZ53FJ3q8smK9WtakFGdDReF9AIhoew9tq_Q5-4wQku2AF_gUUDLgbSmFkIbRmBMyC4i-JGj0",
+        });
+
+        if (currentToken && auth.currentUser) {
+          await setDoc(
+            doc(db, "users", auth.currentUser.uid),
+            { fcmToken: currentToken },
+            { merge: true }
+          );
+          console.log("✅ FCM token saved");
+        }
+      } catch (error) {
+        console.error("🔥 Error getting FCM token:", error);
+      }
+    };
+
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) requestAndSaveFCMToken();
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  const toggleDarkMode = () => {
-    const newDarkMode = !isDarkMode;
-    setIsDarkMode(newDarkMode);
-    
-    if (newDarkMode) {
-      document.body.classList.add("dark");
-      Preferences.set({ key: "theme", value: "dark" });
-    } else {
-      document.body.classList.remove("dark");
-      Preferences.set({ key: "theme", value: "light" });
-    }
-  };
-
   return (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/auth" component={Auth} />
-        <Route exact path = "/login">
-        <Login/>
-        </Route>
-        <Route exact path = "/register">
-        <Register/>
-        </Route>
-        <Route exact path="/home">
-          <Home />
-        </Route>
-        <Route exact path="/create-event">
-          <EventForm />
-        </Route>
-          <Route exact path="/search">
-          <Search/>
-        </Route>
-        <Route>
-          <Route exact path="/calendar">
-          <Calendar/>
-          </Route>
-        </Route>
-        
-        <Route exact path="/profile">
-        <Profile/>
-        </Route>
-         
-        
-      </IonRouterOutlet>
-    </IonReactRouter>
-    {/* Dark Mode Toggle Button */}
-    <IonButton expand="full" onClick={toggleDarkMode} style={{ position: "fixed", top: "0px", right: "20px", zIndex: 1000, width: "40px", height: "10px" ,}}>
-        {isDarkMode ? "🌞" : "🌙"}
-      </IonButton>
-  </IonApp>
-);
+    <IonApp>
+      <IonReactRouter>
+        <RouterWrapper isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+      </IonReactRouter>
+    </IonApp>
+  );
 };
+
 export default App;

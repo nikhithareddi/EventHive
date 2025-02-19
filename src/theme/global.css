@@ -33,4 +33,12 @@ ion-content {
     color: var(--ion-text-color);
   }
   
+  ion-datetime::part(calendar-day) {
+    border-radius: 8px;
+  }
+  
+  ion-datetime::part(calendar-day today) {
+    font-weight: bold;
+    border: 1px solid #8462d1;
+  }
   
