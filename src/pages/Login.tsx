@@ -55,8 +55,8 @@ const Login: React.FC = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: '#121212', // fallback dark background
-          backgroundImage: 'url("/bg-login.jpg")', // your background image
+          backgroundColor: '#121212', 
+          backgroundImage: 'url("/bg-login.jpg")',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
