@@ -1,0 +1,6 @@
+{
+  "appId": "com.eventhive.app",
+  "appName": "EventHive",
+  "webDir": "build",
+  "bundledWebRuntime": false
+}

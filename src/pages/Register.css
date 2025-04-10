@@ -1,0 +1,12 @@
+/* Register Page Specific Styles */
+ion-select {
+    width: 100%;
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+    .login-container, .register-container {
+        padding: 15px;
+        margin: 10px;
+    }
+}

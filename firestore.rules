@@ -1,0 +1,16 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Temporarily allow anyone to write to users collection (not recommended for production)
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+
+    // Default rule for events
+    match /events/{eventId} {
+      allow read, create: if request.auth != null;
+    }
+  }
+}
+

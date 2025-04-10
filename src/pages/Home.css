@@ -1,0 +1,19 @@
+ion-card {
+    width: 100%;
+    max-width: 350px;
+    margin: auto;
+    text-align: center;
+    background: var(--ion-card-background, rgb(144, 155, 170));
+    box-shadow: 0px 4px 8px rgba(33, 156, 209, 0.941);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  
+  ion-card-title {
+    --color: #6c2a4e;
+  }
+  
+  ion-card-subtitle {
+    --color: #498b81;
+  }
+  

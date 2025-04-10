@@ -1,0 +1,36 @@
+/* Add padding & spacing to avoid elements sticking to edges */
+ion-content {
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+    --padding-start: 16px;
+    --padding-end: 16px;
+  }
+  
+  /* Improve button styling */
+  ion-button {
+    --border-radius: 10px;
+    --box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Improve card spacing */
+  ion-card {
+    margin-bottom: 12px;
+  }
+  
+  /* Ensure dark mode works properly */
+  .dark-mode ion-content {
+    background-color: #1e1e1e;
+    color: #ffffff;
+  }
+
+  ion-content {
+    --background: var(--ion-background-color);
+    --color: var(--ion-text-color);
+  }
+  
+  ion-card {
+    --background: var(--ion-card-background);
+    color: var(--ion-text-color);
+  }
+  
+  

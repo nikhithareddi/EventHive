@@ -29,3 +29,11 @@ yarn-error.log*
 
 # Optional eslint cache
 .eslintcache
+
+
+# Firebase config
+.firebase/
+.firebaserc
+firebase-debug.log
+firebase-debug.*
+firebase.json
