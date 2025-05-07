@@ -77,30 +77,14 @@ const SettingsEvents: React.FC = () => {
     fetchUserAndEvents();
   }, []);
 
-  const formatDateTime = (dateStr: string, timeStr: string) => {
-    if (!dateStr || !timeStr) return "Date not available";
-    try {
-      const [year, month, day] = dateStr.split("-");
-      const [hour, minute] = timeStr.split(":");
-      const date = new Date(
-        Number(year),
-        Number(month) - 1,
-        Number(day),
-        Number(hour),
-        Number(minute)
-      );
-      return date.toLocaleString("en-US", {
-        month: "short",
-        day: "numeric",
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true,
-      });
-    } catch (error) {
-      console.error("Error formatting date:", error);
-      return "Invalid date";
-    }
-  };
+  
+  const formatDateTime = (dateStr: string) => {
+    
+    if (!dateStr) return "Date not available";
+    
+    const dateObj = new Date(dateStr);
+
+    return dateObj.toLocaleString(); };
 
   const handleEdit = (event: EventData) => {
     history.push("/eventform", { event }); // Redirect to EventForm with event data
@@ -139,7 +123,7 @@ const SettingsEvents: React.FC = () => {
             <IonCard key={event.id}>
               <IonCardHeader>
                 <IonCardTitle>{event.title}</IonCardTitle>
-                <IonCardSubtitle>{formatDateTime(event.date, event.time)}</IonCardSubtitle>
+                <IonCardSubtitle>{formatDateTime(event.date)}</IonCardSubtitle>
                 <IonCardSubtitle>📍 {event.location}</IonCardSubtitle>
 
                 {userRole === "Club Member" && (

@@ -80,35 +80,41 @@ const Home: React.FC = () => {
     }
   };
 
-  const formatDateTime = (dateStr: string, timeStr: string) => {
-    try {
-      if (!dateStr || !timeStr) return "Date not available";
+  // const formatDateTime = (dateStr: string, timeStr: string) => {
+  //   try {
+  //     if (!dateStr || !timeStr) return "Date not available";
   
-      const [year, month, day] = dateStr.split("-");
-      const [hour, minute] = timeStr.split(":");
+  //     const [year, month, day] = dateStr.split("-");
+  //     const [hour, minute] = timeStr.split(":");
   
-      const date = new Date(
-        Number(year),
-        Number(month) - 1,
-        Number(day),
-        Number(hour),
-        Number(minute)
-      );
+  //     const date = new Date(
+  //       Number(year),
+  //       Number(month) - 1,
+  //       Number(day),
+  //       Number(hour),
+  //       Number(minute)
+  //     );
   
-      return date.toLocaleString("en-US", {
-        month: "short", // Apr
-        day: "numeric", // 13
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true,
-      });
-    } catch (err) {
-      console.error("Error in formatDateTime:", err);
-      return "Invalid date";
-    }
-  };
-  
-  
+  //     return date.toLocaleString("en-US", {
+  //       month: "short", // Apr
+  //       day: "numeric", // 13
+  //       hour: "numeric",
+  //       minute: "2-digit",
+  //       hour12: true,
+  //     });
+  //   } catch (err) {
+  //     console.error("Error in formatDateTime:", err);
+  //     return "Invalid date";
+  //   }
+  // };
+
+  const formatDateTime = (dateStr: string) => {
+    
+      if (!dateStr) return "Date not available";
+      
+      const dateObj = new Date(dateStr);
+
+      return dateObj.toLocaleString(); };
 
   return (
     <IonPage>
@@ -132,7 +138,7 @@ const Home: React.FC = () => {
                     <IonCardHeader>
     <IonCardTitle>{event.title}</IonCardTitle>
     <IonCardSubtitle>{event.clubName}</IonCardSubtitle>
-    <IonCardSubtitle>{formatDateTime(event.date, event.time)}</IonCardSubtitle>
+    <IonCardSubtitle>{formatDateTime(event.date)}</IonCardSubtitle>
   </IonCardHeader>
   <IonItem lines="none">
     📍 {event.location}

@@ -85,7 +85,7 @@ const CalendarPage: React.FC = () => {
                   }}
                 >
                   <h4 style={{ margin: "0 0 0.25rem", color: "black" }}>{event.title}, {event.clubName}</h4>
-                  <p style={{ margin: 0, color: "black" }}>🕒 {event.time}</p>
+                  <p style={{ margin: 0, color: "black" }}>🕒 {(new Date(event.date)).toLocaleString()}</p>
                   
                   <p style={{ margin: 0, color: "black" }}>📍 {event.location}</p>
                 </div>

@@ -77,30 +77,13 @@ const Search: React.FC = () => {
       setSuggestedEvents(results);
     }
   }, [searchText, allEvents]);
-  const formatDateTime = (dateStr: string, timeStr: string) => {
-    try {
-      const [year, month, day] = dateStr.split("-");
-      const [hour, minute] = timeStr.split(":");
-  
-      const date = new Date(
-        Number(year),
-        Number(month) - 1,
-        Number(day),
-        Number(hour),
-        Number(minute)
-      );
-  
-      return date.toLocaleString("en-US", {
-        month: "short", // Apr
-        day: "numeric", // 15
-        hour: "numeric", // 3
-        minute: "2-digit", // 00
-        hour12: true, // PM/AM
-      });
-    } catch (err) {
-      return "Invalid date";
-    }
-  };
+  const formatDateTime = (dateStr: string) => {
+    
+    if (!dateStr) return "Date not available";
+
+    const dateObj = new Date(dateStr);
+
+    return dateObj.toLocaleString(); };
   
   return (
     <IonPage>
@@ -126,7 +109,7 @@ const Search: React.FC = () => {
                 <IonCardHeader>
     <IonCardTitle>{event.title}</IonCardTitle>
     <IonCardSubtitle>{event.clubName}</IonCardSubtitle>
-    <IonCardSubtitle>{formatDateTime(event.date, event.time)}</IonCardSubtitle>
+    <IonCardSubtitle>{formatDateTime(event.date)}</IonCardSubtitle>
   </IonCardHeader>
   <IonItem lines="none">
     📍 {event.location}
