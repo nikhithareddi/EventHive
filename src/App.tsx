@@ -87,7 +87,7 @@ const handleLogout = async () => {
         </IonHeader>
         <IonContent className="ion-padding">
           <IonList>
-            {/* Replace routerLink with onClick handlers for more reliable navigation */}
+            
             <IonItem button onClick={() => navigateTo('/home')}>
               <IonLabel>Home</IonLabel>
             </IonItem>
