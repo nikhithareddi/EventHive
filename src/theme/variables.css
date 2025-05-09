@@ -11,6 +11,6 @@ http://ionicframework.com/docs/theming/ */
   body.dark {
     --ion-background-color: #1e1e1e;
     --ion-text-color: #ffffff;
-    --ion-card-background: #2e2e2e;
+    --ion-card-background: #afe286;
   }
   

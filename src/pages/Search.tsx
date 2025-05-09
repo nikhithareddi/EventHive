@@ -99,6 +99,7 @@ const Search: React.FC = () => {
           onIonInput={(e) => setSearchText(e.detail.value!)}
           debounce={100}
           placeholder="Search by title"
+          
         />
 
         <IonGrid>

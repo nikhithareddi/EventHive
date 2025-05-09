@@ -66,6 +66,17 @@ const handleLogout = async () => {
 };
 
 
+  const navigateTo = (path: string) => {
+    history.push(path);
+    if (history.location.pathname === path) {
+      if (path === '/calendar') {
+        const currentUrl = window.location.href;
+        window.location.href = currentUrl;
+      }
+    }
+  };
+
+
   return !hideMenu ? (
     <IonSplitPane contentId="main-content">
       <IonMenu side="end" contentId="main-content">
@@ -76,14 +87,26 @@ const handleLogout = async () => {
         </IonHeader>
         <IonContent className="ion-padding">
           <IonList>
-          
-  <IonItem routerLink="/home" routerDirection="root"><IonLabel>Home</IonLabel></IonItem>
-  <IonItem routerLink="/create-event" routerDirection="root"><IonLabel>Create Event</IonLabel></IonItem>
-  <IonItem routerLink="/search" routerDirection="root"><IonLabel>Search</IonLabel></IonItem>
-  <IonItem routerLink="/calendar" routerDirection="root"><IonLabel>Calendar</IonLabel></IonItem>
-  <IonItem routerLink="/profile" routerDirection="root"><IonLabel>My Profile</IonLabel></IonItem>
-  <IonItem button onClick={handleLogout}><IonLabel>Logout</IonLabel></IonItem>
-</IonList>
+            {/* Replace routerLink with onClick handlers for more reliable navigation */}
+            <IonItem button onClick={() => navigateTo('/home')}>
+              <IonLabel>Home</IonLabel>
+            </IonItem>
+            <IonItem button onClick={() => navigateTo('/create-event')}>
+              <IonLabel>Create Event</IonLabel>
+            </IonItem>
+            <IonItem button onClick={() => navigateTo('/search')}>
+              <IonLabel>Search</IonLabel>
+            </IonItem>
+            <IonItem button onClick={() => navigateTo('/calendar')}>
+              <IonLabel>Calendar</IonLabel>
+            </IonItem>
+            <IonItem button onClick={() => navigateTo('/profile')}>
+              <IonLabel>My Profile</IonLabel>
+            </IonItem>
+            <IonItem button onClick={handleLogout}>
+              <IonLabel>Logout</IonLabel>
+            </IonItem>
+          </IonList>
 
 
           
@@ -91,45 +114,46 @@ const handleLogout = async () => {
       </IonMenu>
 
       <IonPage id="main-content">
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Event Hive</IonTitle>
-            <IonButtons slot="end">
-              <IonMenuButton />
-            </IonButtons>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          <IonRouterOutlet>
-            <Route exact path="/auth" component={Auth} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/register" component={Register} />
-            <Route exact path="/home" component={Home} />
-            <Route exact path="/profile" component={Profile} />
-            <Route exact path="/edit-profile" component={EditProfile}/>
-            <Route exact path="/settings-events" component={SettingsEvents} />
-            <Route exact path="/search" component={Search} />
-            <Route exact path="/create-event" component={EventForm} />
-            <Route exact path="/calendar" component={Calendar} />
-            <Redirect exact from="/" to="/login" />
-          </IonRouterOutlet>
-        </IonContent>
-        <IonButton
-          expand="full"
-          onClick={toggleDarkMode}
-          style={{
-            position: "fixed",
-            top: "0px",
-            bottom: "2px",
-            right: "40px",
-            zIndex: 1000,
-            width: "40px",
-            height: "40px",
-          }}
-        >
-          {isDarkMode ? "🌞" : "🌙"}
-        </IonButton>
-      </IonPage>
+  <IonHeader>
+    <IonToolbar>
+      <IonTitle>Event Hive</IonTitle>
+      <IonButtons slot="end">
+        <IonMenuButton />
+      </IonButtons>
+    </IonToolbar>
+  </IonHeader>
+
+  <IonRouterOutlet id="main-content">
+    <Route exact path="/auth" component={Auth} />
+    <Route exact path="/login" component={Login} />
+    <Route exact path="/register" component={Register} />
+    <Route exact path="/home" component={Home} />
+    <Route exact path="/profile" component={Profile} />
+    <Route exact path="/edit-profile" component={EditProfile} />
+    <Route exact path="/settings-events" component={SettingsEvents} />
+    <Route exact path="/search" component={Search} />
+    <Route exact path="/create-event" component={EventForm} />
+    <Route exact path="/calendar" component={Calendar} />
+    <Redirect exact from="/" to="/login" />
+  </IonRouterOutlet>
+
+  <IonButton
+    expand="full"
+    onClick={toggleDarkMode}
+    style={{
+      position: "fixed",
+      top: "0px",
+      bottom: "2px",
+      right: "40px",
+      zIndex: 1000,
+      width: "40px",
+      height: "40px",
+    }}
+  >
+    {isDarkMode ? "🌞" : "🌙"}
+  </IonButton>
+</IonPage>
+
     </IonSplitPane>
   ) : (
     <IonRouterOutlet>

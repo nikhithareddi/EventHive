@@ -13,7 +13,7 @@ interface EventData {
   location: string;
 }
 
-const CalendarPage: React.FC = () => {
+const Calendar: React.FC = () => {
   const [events, setEvents] = useState<EventData[]>([]);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
@@ -100,4 +100,4 @@ const CalendarPage: React.FC = () => {
   );
 };
 
-export default CalendarPage;
+export default Calendar;

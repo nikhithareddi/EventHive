@@ -35,6 +35,7 @@ ion-content {
   
   ion-datetime::part(calendar-day) {
     border-radius: 8px;
+    color:  #1e1e1e;
   }
   
   ion-datetime::part(calendar-day today) {
