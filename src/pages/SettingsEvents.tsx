@@ -87,7 +87,7 @@ const SettingsEvents: React.FC = () => {
     return dateObj.toLocaleString(); };
 
   const handleEdit = (event: EventData) => {
-    history.push("/eventform", { event }); // Redirect to EventForm with event data
+    history.push("/eventform", { event });
   };
 
   const handleDelete = async (eventId: string) => {
@@ -133,9 +133,7 @@ const SettingsEvents: React.FC = () => {
                     </IonCardSubtitle>
 
                     <IonButtons>
-                      <IonButton onClick={() => handleEdit(event)} color="primary" size="small">
-                        Edit
-                      </IonButton>
+                      
                       <IonButton onClick={() => handleDelete(event.id)} color="danger" size="small">
                         Delete
                       </IonButton>
